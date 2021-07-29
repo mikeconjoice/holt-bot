@@ -20,7 +20,7 @@ var stream = T.stream('statuses/filter', { track: '@positiveholt' });
 stream.on('tweet', tweetEvent);
 
 //array to add random emojis to the beginning of the tweet
-const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
+const emoji = ["🔥🔥🔥", "🎺🔥🎺", "🙋‍♀️🔥🙋‍♀️"];
 
 
 // Here a tweet event is triggered!
