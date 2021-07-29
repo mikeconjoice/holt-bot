@@ -32,11 +32,11 @@ const mediaSize = fs.statSync(pathToFile).size
 initializeMediaUpload()
   .then(appendFileChunk)
   .then(finalizeUpload)
-  .then(tweetEvent)
+  .then(publishStatusUpdate)
 
 function initializeMediaUpload() {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "INIT",
       total_bytes: mediaSize,
       media_type: mediaType
@@ -53,7 +53,7 @@ function initializeMediaUpload() {
 
 function appendFileChunk(mediaId) {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "APPEND",
       media_id: mediaId,
       media: mediaData,
@@ -71,7 +71,7 @@ function appendFileChunk(mediaId) {
 
 function finalizeUpload(mediaId) {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "FINALIZE",
       media_id: mediaId
     }, function(error, data, response) {
@@ -85,32 +85,34 @@ function finalizeUpload(mediaId) {
   })
 }
 
-// Here a tweet event is triggered!
-function tweetEvent(tweet, mediaId) {
+
+function publishStatusUpdate(mediaId) {
 
   var id = tweet.id_str;
   var text = tweet.text;
   var name = tweet.user.screen_name;
 
-  //from itsAydrian in twitch chat on 1/28 😘    
   let i = Math.floor(Math.random() * 3);
+
+  return new Promise(function(resolve, reject) {
+    if ((text.includes('@positiveholt'))) {
+
+      // Start a reply back to the sender
+      var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
+      
+      // Post that tweet
+      T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
   
-  // checks text of tweet for mention of Shania Bot
-  if ((text.includes('@positiveholt'))) {
-
-    // Start a reply back to the sender
-    var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
-    
-    // Post that tweet
-    T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
-
-    // Make sure it worked!
-    function tweeted(err, reply) {
-      if (err) {
-        console.log(err.message);
-      } else {
-        console.log('Tweeted: ' + reply.text);
+      // Make sure it worked!
+      function tweeted(err, reply) {
+        if (err) {
+          console.log(err.message);
+        } else {
+          console.log('Tweeted: ' + reply.text);
+        }
+  
       }
+// Here a tweet event is triggered!
     }    
   }
 }
