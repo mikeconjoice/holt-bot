@@ -32,7 +32,7 @@ const mediaSize = fs.statSync(pathToFile).size
 initializeMediaUpload()
   .then(appendFileChunk)
   .then(finalizeUpload)
-  .then(publishStatusUpdate)
+  .then(tweetEvent)
 
 function initializeMediaUpload() {
   return new Promise(function(resolve, reject) {
