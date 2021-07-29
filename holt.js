@@ -33,9 +33,6 @@ function tweetEvent(tweet, mediaId) {
   //from itsAydrian in twitch chat on 1/28 😘    
   let i = Math.floor(Math.random() * 3);
 
-  // checks text of tweet for mention of Shania Bot
-  if ((text.includes('@positiveholt'))) {
-
     // Start a reply back to the sender
     var replyText = emoji[i] + "@" + name + " YAASSS!!! ";
     var b64content = fs.readFileSync('yas.gif', { encoding: 'base64' })
@@ -60,4 +57,3 @@ function tweetEvent(tweet, mediaId) {
     }
     )
   }
-}
