@@ -35,12 +35,12 @@ initializeMediaUpload()
   .then(publishStatusUpdate)
 
 function initializeMediaUpload() {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     T.post("media/upload", {
       command: "INIT",
       total_bytes: mediaSize,
       media_type: mediaType
-    }, function(error, data, response) {
+    }, function (error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -52,13 +52,13 @@ function initializeMediaUpload() {
 }
 
 function appendFileChunk(mediaId) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     T.post("media/upload", {
       command: "APPEND",
       media_id: mediaId,
       media: mediaData,
       segment_index: 0
-    }, function(error, data, response) {
+    }, function (error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -70,11 +70,11 @@ function appendFileChunk(mediaId) {
 }
 
 function finalizeUpload(mediaId) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     T.post("media/upload", {
       command: "FINALIZE",
       media_id: mediaId
-    }, function(error, data, response) {
+    }, function (error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -94,25 +94,16 @@ function publishStatusUpdate(mediaId) {
 
   let i = Math.floor(Math.random() * 3);
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     if ((text.includes('@positiveholt'))) {
 
       // Start a reply back to the sender
-      var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
-      
+      var replyText = emoji[i] + "@" + name + " YASSSSS!!! ";
+
       // Post that tweet
       T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
-  
+
       // Make sure it worked!
-      function tweeted(err, reply) {
-        if (err) {
-          console.log(err.message);
-        } else {
-          console.log('Tweeted: ' + reply.text);
-        }
-  
       }
-// Here a tweet event is triggered!
-    }    
+    }
   }
-}
