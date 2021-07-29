@@ -26,8 +26,6 @@ const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
 // Here a tweet event is triggered!
 function tweetEvent(tweet, mediaId) {
 
-  T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-
     var id = tweet.id_str;
     var text = tweet.text;
     var name = tweet.user.screen_name;
@@ -40,7 +38,7 @@ function tweetEvent(tweet, mediaId) {
 
       // Start a reply back to the sender
       var replyText = emoji[i] + "@" + name + " YASSSSS!!! ";
-      var b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
+      var b64content = fs.readFileSync('yas.gif', { encoding: 'base64' })
 
       // first we must post the media to Twitter
       T.post('media/upload', { media_data: b64content }, function (err, data, response) {
