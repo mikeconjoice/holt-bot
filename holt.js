@@ -60,5 +60,4 @@ function tweetEvent(tweet, mediaId) {
       }
       )
     }
-  })
-}
+  }
