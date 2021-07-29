@@ -48,9 +48,9 @@ function tweetEvent(tweet, mediaId) {
         var altText = "Small flowers in a planter on a sunny balcony, blossoming."
         var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
 
-        T.post('media/metadata/create', meta_params, function (err, data, response) {
-          if (!err) {
-            var params = { status: replyText, media_ids: [mediaIdStr] }
+        T.post('media/metadata/create', meta_params, {
+          var params = { status: replyText, media_ids: [mediaIdStr] }
+        }
 
             // Post that tweet
             T.post('statuses/update', params)
