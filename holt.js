@@ -3,8 +3,6 @@ if (process.env.NODE_ENV === "develop") {
 };
 
 var fs = require("fs")
-b64content = fs.readFileSync(image_path, { encoding: 'base64' });
-
 
 // Create an Twitter object to connect to Twitter API
 var Twit = require('twit');
@@ -42,7 +40,7 @@ function tweetEvent(tweet, mediaId) {
 
       // Start a reply back to the sender
       var replyText = emoji[i] + "@" + name + " YASSSSS!!! ";
-      var b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
+      b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
 
       // first we must post the media to Twitter
       T.post('media/upload', { media_data: b64content }, function (err, data, response) {
