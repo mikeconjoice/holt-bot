@@ -28,36 +28,39 @@ function tweetEvent(tweet, mediaId) {
 
   T.post('media/upload', { media_data: b64content }, function (err, data, response) {
 
-  var id = tweet.id_str;
-  var text = tweet.text;
-  var name = tweet.user.screen_name;
+    var id = tweet.id_str;
+    var text = tweet.text;
+    var name = tweet.user.screen_name;
 
-  //from itsAydrian in twitch chat on 1/28 😘    
-  let i = Math.floor(Math.random() * 3);
-  
-  // checks text of tweet for mention of Shania Bot
-  if ((text.includes('@positiveholt'))) {
+    //from itsAydrian in twitch chat on 1/28 😘    
+    let i = Math.floor(Math.random() * 3);
 
-    // Start a reply back to the sender
-    var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
-    var b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
+    // checks text of tweet for mention of Shania Bot
+    if ((text.includes('@positiveholt'))) {
 
-    // first we must post the media to Twitter
-T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-  // now we can assign alt text to the media, for use by screen readers and
-  // other text-based presentations and interpreters
-  var mediaIdStr = data.media_id_string
-  var altText = "Small flowers in a planter on a sunny balcony, blossoming."
-  var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+      // Start a reply back to the sender
+      var replyText = emoji[i] + "@" + name + " YASSSSS!!! ";
+      var b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
 
-  T.post('media/metadata/create', meta_params, function (err, data, response) {
-    if (!err) {
-      var params = { status: replyText, media_ids: [mediaIdStr] }
+      // first we must post the media to Twitter
+      T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        // now we can assign alt text to the media, for use by screen readers and
+        // other text-based presentations and interpreters
+        var mediaIdStr = data.media_id_string
+        var altText = "Small flowers in a planter on a sunny balcony, blossoming."
+        var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
 
-    // Post that tweet
-    T.post('statuses/update',params);
-  }
+        T.post('media/metadata/create', meta_params, function (err, data, response) {
+          if (!err) {
+            var params = { status: replyText, media_ids: [mediaIdStr] }
+
+            // Post that tweet
+            T.post('statuses/update', params)
+          }
+        }
+        )
+      }
+      )
     }
-    // Make sure it worked!
-  }
+  })
 }
