@@ -23,7 +23,7 @@ stream.on('tweet', tweetEvent);
 const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
 
 //upload the gif
-const pathToFile = "https://media1.tenor.com/images/a607c4af22e528f2ee0321807170c006/tenor.gif"
+const pathToFile = "./yas.gif"
 const mediaType = "image/gif"
 
 const mediaData = fs.readFileSync(pathToFile)
