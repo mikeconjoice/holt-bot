@@ -56,9 +56,8 @@ function tweetEvent(tweet, mediaId) {
             T.post('statuses/update', params)
           }
         }
-        )
-      }
-      )
+               )}
+        )}
     }
-  })
+  }
 }
