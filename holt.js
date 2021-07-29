@@ -17,7 +17,7 @@ var stream = T.stream('statuses/filter', { track: '@positiveholt' });
 
 // Now looking for tweet events
 // See: https://dev.twitter.com/streaming/userstreams
-stream.on('tweet', publishStatusUpdate);
+stream.on('tweet', tweetEvent);
 
 //array to add random emojis to the beginning of the tweet
 const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
@@ -35,12 +35,12 @@ initializeMediaUpload()
   .then(publishStatusUpdate)
 
 function initializeMediaUpload() {
-  return new Promise(function (resolve, reject) {
-    T.post("media/upload", {
+  return new Promise(function(resolve, reject) {
+    client.post("media/upload", {
       command: "INIT",
       total_bytes: mediaSize,
       media_type: mediaType
-    }, function (error, data, response) {
+    }, function(error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -52,13 +52,13 @@ function initializeMediaUpload() {
 }
 
 function appendFileChunk(mediaId) {
-  return new Promise(function (resolve, reject) {
-    T.post("media/upload", {
+  return new Promise(function(resolve, reject) {
+    client.post("media/upload", {
       command: "APPEND",
       media_id: mediaId,
       media: mediaData,
       segment_index: 0
-    }, function (error, data, response) {
+    }, function(error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -70,11 +70,11 @@ function appendFileChunk(mediaId) {
 }
 
 function finalizeUpload(mediaId) {
-  return new Promise(function (resolve, reject) {
-    T.post("media/upload", {
+  return new Promise(function(resolve, reject) {
+    client.post("media/upload", {
       command: "FINALIZE",
       media_id: mediaId
-    }, function (error, data, response) {
+    }, function(error, data, response) {
       if (error) {
         console.log(error)
         reject(error)
@@ -85,24 +85,32 @@ function finalizeUpload(mediaId) {
   })
 }
 
-
-function publishStatusUpdate(mediaId) {
+// Here a tweet event is triggered!
+function tweetEvent(tweet, mediaId) {
 
   var id = tweet.id_str;
   var text = tweet.text;
   var name = tweet.user.screen_name;
 
+  //from itsAydrian in twitch chat on 1/28 😘    
   let i = Math.floor(Math.random() * 3);
+  
+  // checks text of tweet for mention of Shania Bot
+  if ((text.includes('@positiveholt'))) {
 
-  return new Promise(function (resolve, reject) {
-    if ((text.includes('@positiveholt'))) {
+    // Start a reply back to the sender
+    var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
+    
+    // Post that tweet
+    T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
 
-      // Start a reply back to the sender
-      var replyText = emoji[i] + "@" + name + " YASSSSS!!! ";
-
-      // Post that tweet
-      T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
+    // Make sure it worked!
+    function tweeted(err, reply) {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log('Tweeted: ' + reply.text);
       }
-    }
-  )
+    }    
+  }
 }
