@@ -3,6 +3,8 @@ if (process.env.NODE_ENV === "develop") {
 };
 
 var fs = require("fs")
+b64content = fs.readFileSync(image_path, { encoding: 'base64' });
+
 
 // Create an Twitter object to connect to Twitter API
 var Twit = require('twit');
