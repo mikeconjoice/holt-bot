@@ -22,71 +22,11 @@ stream.on('tweet', tweetEvent);
 //array to add random emojis to the beginning of the tweet
 const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
 
-//upload the gif
-const pathToFile = "./yas.gif"
-const mediaType = "image/gif"
-
-const mediaData = fs.readFileSync(pathToFile)
-const mediaSize = fs.statSync(pathToFile).size
-
-initializeMediaUpload()
-  .then(appendFileChunk)
-  .then(finalizeUpload)
-  .then(tweetEvent)
-
-function initializeMediaUpload() {
-  return new Promise(function(resolve, reject) {
-    T.post("media/upload", {
-      command: "INIT",
-      total_bytes: mediaSize,
-      media_type: mediaType
-    }, function(error, data, response) {
-      if (error) {
-        console.log(error)
-        reject(error)
-      } else {
-        resolve(data.media_id_string)
-      }
-    })
-  })
-}
-
-function appendFileChunk(mediaId) {
-  return new Promise(function(resolve, reject) {
-    T.post("media/upload", {
-      command: "APPEND",
-      media_id: mediaId,
-      media: mediaData,
-      segment_index: 0
-    }, function(error, data, response) {
-      if (error) {
-        console.log(error)
-        reject(error)
-      } else {
-        resolve(mediaId)
-      }
-    })
-  })
-}
-
-function finalizeUpload(mediaId) {
-  return new Promise(function(resolve, reject) {
-    T.post("media/upload", {
-      command: "FINALIZE",
-      media_id: mediaId
-    }, function(error, data, response) {
-      if (error) {
-        console.log(error)
-        reject(error)
-      } else {
-        resolve(mediaId)
-      }
-    })
-  })
-}
 
 // Here a tweet event is triggered!
 function tweetEvent(tweet, mediaId) {
+
+  T.post('media/upload', { media_data: b64content }, function (err, data, response) {
 
   var id = tweet.id_str;
   var text = tweet.text;
@@ -100,17 +40,24 @@ function tweetEvent(tweet, mediaId) {
 
     // Start a reply back to the sender
     var replyText = emoji[i] + "@"+ name + " YASSSSS!!! ";
-    
-    // Post that tweet
-    T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
+    var b64content = fs.readFileSync('./yas.gif', { encoding: 'base64' })
 
+    // first we must post the media to Twitter
+T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+  // now we can assign alt text to the media, for use by screen readers and
+  // other text-based presentations and interpreters
+  var mediaIdStr = data.media_id_string
+  var altText = "Small flowers in a planter on a sunny balcony, blossoming."
+  var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+
+  T.post('media/metadata/create', meta_params, function (err, data, response) {
+    if (!err) {
+      var params = { status: replyText, media_ids: [mediaIdStr] }
+
+    // Post that tweet
+    T.post('statuses/update',params);
+  }
+    }
     // Make sure it worked!
-    function tweeted(err, reply) {
-      if (err) {
-        console.log(err.message);
-      } else {
-        console.log('Tweeted: ' + reply.text);
-      }
-    }    
   }
 }
