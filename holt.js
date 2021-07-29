@@ -102,8 +102,7 @@ function publishStatusUpdate(mediaId) {
 
       // Post that tweet
       T.post('statuses/update', { status: replyText, in_reply_to_status_id: id, media_ids: mediaId }, tweeted);
-
-      // Make sure it worked!
       }
     }
-  }
+  )
+}
