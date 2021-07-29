@@ -36,7 +36,7 @@ initializeMediaUpload()
 
 function initializeMediaUpload() {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "INIT",
       total_bytes: mediaSize,
       media_type: mediaType
@@ -53,7 +53,7 @@ function initializeMediaUpload() {
 
 function appendFileChunk(mediaId) {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "APPEND",
       media_id: mediaId,
       media: mediaData,
@@ -71,7 +71,7 @@ function appendFileChunk(mediaId) {
 
 function finalizeUpload(mediaId) {
   return new Promise(function(resolve, reject) {
-    client.post("media/upload", {
+    T.post("media/upload", {
       command: "FINALIZE",
       media_id: mediaId
     }, function(error, data, response) {
