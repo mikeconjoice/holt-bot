@@ -17,7 +17,7 @@ var stream = T.stream('statuses/filter', { track: '@positiveholt' });
 
 // Now looking for tweet events
 // See: https://dev.twitter.com/streaming/userstreams
-stream.on('tweet', tweetEvent);
+stream.on('tweet', publishStatusUpdate);
 
 //array to add random emojis to the beginning of the tweet
 const emoji = ["🔥🔥🔥", "🔥🎺🔥", "🔥🙋‍♀️🔥"];
