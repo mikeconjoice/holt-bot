@@ -50,7 +50,7 @@ function tweetEvent(tweet, mediaId) {
 
       T.post('media/metadata/create', meta_params, function (err, data, response) {
         if (!err) {
-          var params = { status: replyText, media_ids: [mediaIdStr] }
+          var params = { status: replyText, in_reply_to_status_id: id, media_ids: [mediaIdStr] }
 
           // Post that tweet
           T.post('statuses/update', params)
